@@ -1,0 +1,107 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Home Page</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="{{STATIC_URL}}bootstrap-3.3.2-dist/css/bootstrap.min.css">
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="{{STATIC_URL}}bootstrap-3.3.2-dist/css/bootstrap-theme.min.css">
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="{{STATIC_URL}}bootstrap-3.3.2-dist/js/bootstrap.min.js"></script> 
+    <link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/index.css"/>
+</head>
+
+<body>
+    <nav class="navbar navbar-inverse">
+        <div class="container">
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand">Social Network</a>
+          </div>
+          <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+              <li class="active"><a href="#">Home</a></li>
+              <li><a href="{% url 'profile' %}">Profile</a></li>
+              <li><a href="{% url 'edit-profile' %}">Edit Profile</a></li>
+              <li><a href="{% url 'follow-stream' %}">Follow Stream</a></li>
+            </ul>
+            <div class="navbar-form navbar-right">
+                <a href="{% url 'logout' %}">Logout</a>
+            </div>
+          </div><!--/.nav-collapse -->
+        </div>
+      </nav>
+    <div class="post_panel">
+        <div class="pic">
+          <img  src="{% url 'portrait' %}" width='100px' height='100px'/>
+        </div>
+        <h2 class="post-heading">Do you want post new?</h2>
+        <form enctype="multipart/form-data" action="{% url 'post' %}" method="post">
+            <textarea class="form-control" rows="4" cols="20" maxlength="160" placeholder="Describe yourself here..." name="text"></textarea>
+            <input name="image" type="file" title="upload pic"/>
+            <input type="submit" class="btn btn-success" value="POST"/>
+            {% csrf_token %}
+        </form>
+    </div>
+    <div class="panel-body" id="posts_list">
+        {% for post in posts %}
+        <div class="row" id="ajax_update">
+            <div class="col-sm-1">
+                {% if post.0.user.username != username %}
+                <a href="{% url 'view-profile' post.0.user.id %}">User: {{post.0.user.username}}</a>
+                {% endif %}
+                {% if post.0.user.username == username %}
+                <a> ME : {{post.0.user.username}} </a>
+                {% endif %}
+                 <p><img  src="{% url 'portrait_user' post.0.user.id%}" width='40px' height='40px'/></p> 
+            </div>
+            <div class="col-sm-11">
+                <h4>Date: {{post.0.time}}</h4>
+                <h5>{{post.0.text}}</h5>
+                {% if post.0.picture %}
+                  <div class="pic">
+                  <img  src="{% url 'photo' post.0.id %}" width='100px' height='100px'/>
+                  </div>
+                {% endif %}
+            </div>
+        </div>  
+        <div class = "comments" id="commentslist">
+          {% if post.1 %}
+          {% for comment in post.1 %}
+          <div class="row">
+                        <div class="col-sm-1">
+                            <p><img  src="{% url 'portrait_user' comment.user.id%}" width='40px' height='40px'/></p>           
+                        </div>
+                        <div class="col-sm-11">
+                            <h5>{{comment.user}}</a></h5>
+                            <h6>{{comment.commenttext}}~</h6>
+                        </div>            
+          </div>
+          {% endfor %}
+          {% endif %}
+        </div>
+        
+        <form class = "comment" action="{% url 'comment' post.0.id  %}" method = "post">   
+          {% csrf_token %}   
+          {{ commentform.commenttext }}
+          <button type="submit" class="btn btn-info">Comments</button>
+          <p></p>
+        </form>
+        {% endfor %}
+    </div>
+    <div>
+        <p>{{ form.errors }}</p>
+        <p>{{ form.non_field_errors }}</p>
+    </div>
+    <script src="{{STATIC_URL}}js/ajax_posts.js"></script>
+    <script src="{{STATIC_URL}}js/ajax_comment.js"></script>
+</body>
+</html>
+

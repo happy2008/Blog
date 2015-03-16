@@ -1,0 +1,15 @@
+body {
+    padding: 30px;
+}
+
+button {
+	color: blue
+}
+
+div[class="post_panel"] {
+	width: 350px;
+}
+
+#info {
+	width: 350px;
+}

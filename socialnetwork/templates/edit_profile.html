@@ -1,0 +1,33 @@
+{% extends "profile_basic.html" %}
+
+{% block nav %}
+    <li><a href="{% url 'home' %}">Home</a></li>
+    <li><a href="{% url 'profile' %}">Profile</a></li>
+    <li class="active"><a href="{% url 'edit-profile' %}">Edit Profile</a></li>
+    <li><a href="{% url 'follow-stream' %}">Follow Stream</a></li>
+{% endblock %}
+{% block content %}
+    <form enctype="multipart/form-data" action="{% url 'update_portrait' %}" method="post">
+        <input name="photo" type="file" title="upload photo"/>
+        <input type="submit" class="btn btn-success" value="POST"/>
+        {% csrf_token %}
+    </form>
+    <div class="panel panel-default" id="info">
+    <form method="post" action="{% url 'edit-profile' %}">
+        <table class="table" >
+            <div class="panel-heading"> Edit Profile {% if message %} {{message}} {% endif %}</div>
+            <tbody>
+            {% for field in form.visible_fields %}
+                <tr>
+                    <td>{{field.label_tag}}</td>
+                    <td>{{field}}</td>
+                    <td>{{field.errors}}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        {% csrf_token %}
+        <button class="btn btn-default" type="submit" aligh="right"> Update </button>
+    </form>
+    </div>
+{% endblock %}

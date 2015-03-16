@@ -1,0 +1,30 @@
+fieldset {
+    border: 1px solid rgb(153,153,153);
+    border-radius: 10px;
+}
+
+fieldset .input-row-clear {
+    height: 5px;
+}
+
+fieldset>input[type=submit], fieldset>input[type=reset]{
+    border-radius: 4px;
+    background-color: rgb(60,60,60);
+    color: rgb(255,255,255);
+    height: 30px;
+    width: 90px;
+}
+
+fieldset .required {
+    color: rgb(255, 0, 0);
+}
+
+fieldset label {
+    width: 250px;
+    display: inline-block;
+}
+form {
+	width: 500px;
+	height: 500px;
+	padding:30px; 
+}

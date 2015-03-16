@@ -1,0 +1,59 @@
+{% extends "profile_basic.html" %}
+
+{% block nav %}
+    <li><a href="{% url 'home' %}">Home</a></li>
+    <li><a href="{% url 'profile' %}">Profile</a></li>
+    <li><a href="{% url 'edit-profile' %}">Edit Profile</a></li>
+    <li class="active"><a href="{% url 'follow-stream' %}">Follow Stream</a></li>
+{% endblock %}
+
+{% block content %}    
+    <div class="panel-body" id="posts_list">
+        {% for post in posts %}
+        <div class="row" id="ajax_update">
+            <div class="col-sm-1">
+                {% if post.0.user.username != username %}
+                <a href="{% url 'view-profile' post.0.user.id %}">User: {{post.0.user.username}}</a>
+                {% endif %}
+                {% if post.0.user.username == username %}
+                <a> ME : {{post.0.user.username}} </a>
+                {% endif %}
+                 <p><img  src="{% url 'portrait_user' post.0.user.id %}" width='40px' height='40px'/></p> 
+            </div>
+            <div class="col-sm-11">
+                <h4>Date: {{post.0.time}}</h4>
+                <h5>{{post.0.text}}</h5>
+                {% if post.0.picture %}
+                  <div class="pic">
+                  <img  src="{% url 'photo' post.0.id %}" width='100px' height='100px'/>
+                  </div>
+                {% endif %}
+            </div>
+        </div>  
+        <div class = "comments" id="commentslist">
+          {% if post.1 %}
+          {% for comment in post.1 %}
+          <div class="row">
+                        <div class="col-sm-1">
+                            <p><img  src="{% url 'portrait_user' comment.user.id%}" width='40px' height='40px'/></p>   
+                        </div>
+                        <div class="col-sm-11">
+                            <h5>{{comment.user}}</a></h5>
+                            <h6>{{comment.commenttext}}~</h6>
+                        </div>            
+          </div>
+          {% endfor %}
+          {% endif %}
+        </div>
+        
+        <form class = "comment" action="{% url 'comment' post.0.id  %}" method = "post">   
+          {% csrf_token %}   
+          {{ commentform.commenttext.error }}
+          {{ commentform.commenttext }}
+          <button type="submit" class="btn btn-info">Comments</button>
+          <p></p>
+        </form>
+        {% endfor %}
+    </div>
+    <script src="{{STATIC_URL}}js/ajax_comment.js"></script>
+{% endblock %}

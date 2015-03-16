@@ -1,0 +1,78 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <link rel="stylesheet" href="{{STATIC_URL}}bootstrap-3.3.2-dist/css/bootstrap.min.css">
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="{{STATIC_URL}}bootstrap-3.3.2-dist/css/bootstrap-theme.min.css">
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="{{STATIC_URL}}bootstrap-3.3.2-dist/js/bootstrap.min.js"></script> 
+    <link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/profile.css"/>
+    <meta charset="utf-8">
+    <title>Profile</title>
+</head>
+
+<body>
+    <nav class="navbar navbar-inverse">
+        <div class="container">
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand">Social Network</a>
+          </div>
+          <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+              {% block nav %}
+              {% endblock %}
+            </ul>
+            <div class="navbar-form navbar-right">
+                <a href="{% url 'logout' %}">Logout</a>
+            </div>
+          </div><!--/.nav-collapse -->
+        </div>
+    </nav>
+    <div>
+      <hr>
+      <p>
+      {% if userprofile.picture %}
+        <p>{{userprofile.picture}}</p>
+        <img src="{% url 'photo' userprofile.id %}" alt="{{userprofile.id}}" width="100px">
+        <br>
+      {% endif %}
+      </p>
+      <hr>
+    </div>
+    <div class="content">
+            {% block content %}
+            {% endblock %}
+    </div>
+    <div class="panel-body">
+        {% for messageItem in messageItems %}
+        <div class="row">
+            <div class="col-sm-1">
+                <p><img  src="{% url 'portrait' %}" width='40px' height='40px'/></p> 
+                {% if messageItem.user.username != username %}
+                <a href="{% url 'view-profile' messageItem.user.id %}">User: {{messageItem.user.username}}</a>
+                {% endif %}
+                {% if messageItem.user.username == username %}
+                <a> ME : {{messageItem.user.username}} </a>
+                {% endif %}
+            </div>
+            <div class="col-sm-11">
+                <h4>Date: {{messageItem.time}}</h4>
+                <h5>{{messageItem.text}}</h5>
+                {% if messageItem.picture %}
+                  <div class="pic">
+                  <img  src="{% url 'photo' messageItem.id %}" width='100px' height='100px'/>
+                  </div>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</body>
+</html>
